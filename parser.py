@@ -47,21 +47,21 @@ if response.status_code == 200:
 
     if items:
         filename = f"products_category_{data['categories'][0]}.csv"
-        with open(filename, "w", newline="", encoding="utf-8") as f:
+        with open(f"products_category_{data['categories'][0]}.csv", "w", newline="", encoding="utf-8") as f:
             writer = csv.writer(f)
-            writer.writerow(["id", "name", "price", "old_price", "image_url"])
+            writer.writerow(["id", "name", "regular_price", "promo_price"])
 
             for item in items:
-                price = item.get("price", 0)
-                old_price = item.get("promotion", {}).get("oldPrice")
-                image_url = item.get("gallery", [{}])[0].get("url", "")
+                regular_price = item.get("promotion", {}).get("oldPrice")
+                promo_price = item.get("price")
+                name = item.get("name")
 
                 writer.writerow([
                     item.get("id"),
-                    item.get("name"),
-                    price / 100 if price else "",
-                    old_price / 100 if old_price else "",
-                    image_url
+                    name,
+                    regular_price / 100 if regular_price else "",
+                    promo_price / 100 if promo_price else "",
+
                 ])
         print(f"✅ CSV создан: {filename}")
     else:
